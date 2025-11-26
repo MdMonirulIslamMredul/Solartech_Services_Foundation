@@ -30,3 +30,9 @@ npm-debug.log
 output.txt
 Thumbs.db
 yarn-error.log
+
+# SQL dumps and database files
+_sql/*.sql
+*.sql
+!database/migrations/*.sql
+
