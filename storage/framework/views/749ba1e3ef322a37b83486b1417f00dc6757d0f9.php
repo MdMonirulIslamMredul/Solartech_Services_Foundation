@@ -88,7 +88,19 @@
                 <p style="color: #666; font-size: 16px;">We provide our services across multiple locations!</p>
             </div>
 
-            
+            <div class="service-areas-container" style="display: flex; flex-wrap: wrap; gap: 25px; justify-content: center;">
+                <?php $__currentLoopData = $areas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="service-area-item" style="width: 300px; text-align: center; border: 1px solid #eee; border-radius: 16px; padding: 20px; background: #fafafa; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer;">
+                        <?php if($area->image): ?>
+                            <img src="<?php echo e(asset($area->image)); ?>"
+                                 alt="<?php echo e($area->areaname); ?>"
+                                 style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px;">
+                        <?php endif; ?>
+                        <h3 style="margin-top: 15px; font-size: 20px; font-weight: 700;"><?php echo e($area->areaname); ?></h3>
+                        <p style="font-size: 15px; color: #555; line-height: 1.6;"><?php echo e($area->description); ?></p>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
         </div>
     </div>
 

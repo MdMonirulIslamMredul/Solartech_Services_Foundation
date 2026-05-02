@@ -681,6 +681,56 @@ document.addEventListener('DOMContentLoaded', function() {
         })();
     </script>
 
+<div id="brandsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false"
+     style="width: 100%; padding: 60px 20px; background: #59620933;"> <!-- light skyish background -->
+
+    <!-- Section Title -->
+    <h2 style="text-align: center; margin-bottom: 40px; font-weight: 800; font-size: 2.2rem; ">
+        Our Service Areas
+        <span style="display: block; width: 80px; height: 5px; background: #2D6DB0; margin: 10px auto 0; border-radius: 3px;"></span>
+    </h2>
+
+    <!-- Slides -->
+    <div class="carousel-inner">
+        <?php $__currentLoopData = $areas->chunk(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $chunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="carousel-item <?php echo e($index == 0 ? 'active' : ''); ?>">
+                <div class="row justify-content-center">
+                    <?php $__currentLoopData = $chunk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="col-6 col-sm-4 col-md-3 mb-4 text-center">
+                            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; border-radius: 12px; background: #ffffffaa;">
+                                <?php if($area->image): ?>
+                                    <img src="<?php echo e(asset( $area->image)); ?>"
+                                         alt="<?php echo e($area->areaname); ?>"
+                                         style="max-height: 80px; max-width: 100%; object-fit: contain; margin-bottom: 10px;">
+                                <?php else: ?>
+                                    <p style="font-size: 12px; color:#2D6DB0;"><em>No image available</em></p>
+                                <?php endif; ?>
+                                <h6 style="font-size: 15px; font-weight: 600; color: #333; margin:0;">
+                                    <?php echo e($area->title ?? $area->areaname); ?>
+
+                                </h6>
+                            </div>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+            </div>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#brandsCarousel" data-bs-slide="prev"
+        style="top: 50%; transform: translateY(-50%); left: 15px; width: 40px; height: 40px; border-radius: 50%; background: #ffffff55; border: none;"></button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#brandsCarousel" data-bs-slide="next"
+        style="top: 50%; transform: translateY(-50%); right: 15px; width: 40px; height: 40px; border-radius: 50%; background: #ffffff55; border: none;"></button>
+
+</div>
+
+
+
+
+
+
 
 <div id="brandsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false"
      style="width: 100%; padding: 60px 20px; background: #09622333;"> <!-- light skyish background -->
@@ -726,6 +776,8 @@ document.addEventListener('DOMContentLoaded', function() {
         style="top: 50%; transform: translateY(-50%); right: 15px; width: 40px; height: 40px; border-radius: 50%; background: #ffffff55; border: none;"></button>
 
 </div>
+
+
 
 
 

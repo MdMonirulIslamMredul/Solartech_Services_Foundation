@@ -43,7 +43,7 @@
                 <a href="/blogs" class="back-to-blogs">
                     <i class="flaticon-left-arrow"></i> Back to Blogs
                 </a>
-                
+
                 <div class="blog-meta-bar">
                     <div class="meta-item">
                         <i class="flaticon-user"></i>
