@@ -29,10 +29,9 @@ class PasswordExpiredController
      */
     public function update(UpdatePasswordRequest $request, UserService $userService)
     {
-        dd('hi');
         abort_unless(config('boilerplate.access.user.password_expires_days'), 404);
 
-        $userService->updatePassword($request->user(), $request->only('old_password', 'password'), true);
+        $userService->updatePassword($request->user(), $request->only('current_password', 'password'), true);
 
         return redirect()->route('frontend.user.account')
             ->withFlashSuccess(__('Password successfully updated.'));
