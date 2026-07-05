@@ -1,6 +1,40 @@
 (function ($) {
     "use strict";
-    $(".mean-menu").meanmenu({ meanScreenWidth: "991" });
+    function resetMeanMenuStyles() {
+        $(".mean-nav ul").css({
+            margin: 0,
+            padding: 0,
+            listStyle: "none",
+        });
+        $(".mean-nav ul li").css({
+            margin: 0,
+            padding: 0,
+        });
+    }
+
+    $(".mean-menu").meanmenu({
+        meanScreenWidth: "991",
+        meanShowChildren: true,
+        meanExpandableChildren: true,
+    });
+
+    // Preserve generated child menus and keep mobile submenu styles clean
+    resetMeanMenuStyles();
+    $(".mean-nav ul ul").hide();
+
+    $(document).on("click", ".meanmenu-reveal", function () {
+        setTimeout(function() {
+            resetMeanMenuStyles();
+            $(".mean-nav ul ul").hide();
+        }, 0);
+    });
+
+    $(window).on("resize", function () {
+        if ($(window).width() <= 991) {
+            setTimeout(resetMeanMenuStyles, 100);
+        }
+    });
+
     $(window).on("scroll", function () {
         if ($(this).scrollTop() > 150) {
             $(".navbar-area").addClass("is-sticky");
