@@ -83,14 +83,17 @@ class HomeController
         $brands = Brand::where('is_active', 1)
             ->orderBy('id', 'DESC')
             ->get();
+        $areas = ServicArea::where('is_active', 1)
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        return view('frontend.index', compact('faqs', 'university', 'about', 'galary', 'competition', 'competition_year', 'competition_type', 'product', 'sliders', 'event', 'brands', 'services', 'testmonies', 'blogs', 'projects', 'service_count', 'service_header'));
+        return view('frontend.index', compact('faqs', 'university', 'about', 'galary', 'competition', 'competition_year', 'competition_type', 'product', 'sliders', 'event', 'brands', 'services', 'testmonies', 'blogs', 'projects', 'service_count', 'service_header', 'areas'));
     }
      public function servicedetails()
     {
-        $banner=Service::latest()->first();
-        $services = Service::get();
-         $areas= ServicArea::get();
+        $banner = Service::where('is_active', 1)->latest()->first();
+        $services = Service::where('is_active', 1)->get();
+        $areas = ServicArea::where('is_active', 1)->get();
         return view('frontend.content.servicedetails', compact('services','banner','areas'));
     }
 
