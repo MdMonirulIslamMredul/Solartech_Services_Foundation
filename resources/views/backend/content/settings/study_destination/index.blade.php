@@ -69,6 +69,15 @@ $multis = DB::table('projects')
                         <label>Details Description3</label>
                         <textarea type="text" class="editor form-control" rows="5" name="details_description2[]" id="details" placeholder="Details"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" name="status[]">
+                            <option value="" selected disabled>Select status</option>
+                            <option value="1">Pending</option>
+                            <option value="2">Running</option>
+                            <option value="3">Complete</option>
+                        </select>
+                    </div>
                     <div class="table-responsive">
                         <button type="submit" class="btn btn-info">Submit</button>
                         <!--<input value="Submit" />  -->
@@ -93,6 +102,7 @@ $multis = DB::table('projects')
                         <th>Image</th>
                         <th>Title</th>
                         <th>Details</th>
+                        <th>Status</th>
                         <th>Active/Deactive</th>
                         <th>Action</th>
                     </tr>
@@ -103,7 +113,17 @@ $multis = DB::table('projects')
                         <td><img src="{{ asset('/setting/banner/' . $multi->image) }}" style="height: 100px"></td>
                         <td>{{ $multi->title ?? null }}</td>
                         <td>{!! $multi->details ?? null !!}</td>
-
+                        <td>
+                            @if ($multi->status == 1)
+                                <span class="badge badge-warning">Pending</span>
+                            @elseif ($multi->status == 2)
+                                <span class="badge badge-info">Running</span>
+                            @elseif ($multi->status == 3)
+                                <span class="badge badge-success">Complete</span>
+                            @else
+                                <span class="badge badge-secondary">None</span>
+                            @endif
+                        </td>
                         <td>
                             @if ($multi->is_active == 1)
                             <button class="btn btn-sm btn-primary">Active</button>

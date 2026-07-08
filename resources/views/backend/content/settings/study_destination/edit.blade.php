@@ -72,6 +72,15 @@
                             <textarea type="text" rows="5" name="details_description2" class="editor form-control">{!! $notice->details_description2 !!}</textarea>
                         </div>
                         <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" name="status">
+                                <option value="" disabled {{ $notice->status === null ? 'selected' : '' }}>Select status</option>
+                                <option value="1" {{ $notice->status == 1 ? 'selected' : '' }}>Pending</option>
+                                <option value="2" {{ $notice->status == 2 ? 'selected' : '' }}>Running</option>
+                                <option value="3" {{ $notice->status == 3 ? 'selected' : '' }}>Complete</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>Active/Deactive</label>
                             <select class="form-control" name="is_active">
                                 <option value="1" @if ($notice->is_active == 1) selected @endif>Active</option>

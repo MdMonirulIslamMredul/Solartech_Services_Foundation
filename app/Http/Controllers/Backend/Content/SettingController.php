@@ -868,6 +868,7 @@ class SettingController extends Controller
       $slider->details = $request->details[$key] ?? null;
       $slider->details_description = $request->details_description[$key] ?? null;
       $slider->details_description2 = $request->details_description2[$key] ?? null;
+      $slider->status = $request->status[$key] ?? null;
 
       // if ($request->hasFile('photos')) {
       //   $files = $request->file('photos');
@@ -936,7 +937,7 @@ class SettingController extends Controller
     $slider->details = $request->details ?? null;
     $slider->details_description = $request->details_description ?? null;
     $slider->details_description2 = $request->details_description2 ?? null;
-
+    $slider->status = $request->status ?? null;
     $slider->is_active = $request->is_active;
     // if ($request->hasFile('photos')) {
     //   $files = $request->file('photos');
