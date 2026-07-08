@@ -70,6 +70,11 @@
                             </li>
 
                             <li class="nav-item">
+                                <x-utils.link :href="route('admin.setting.project')" icon="nav-icon icon-arrow-right" class="nav-link"
+                                    :text="__('Project Settings')" />
+                            </li>
+
+                            <li class="nav-item">
                                 <x-utils.link :href="route('admin.area')" icon="nav-icon icon-arrow-right" class="nav-link"
                                     :text="__('Add Service Area')" />
                             </li>
