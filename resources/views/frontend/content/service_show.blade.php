@@ -1,6 +1,7 @@
 @extends('frontend.layouts.app')
 @section('content')
 @php
+    abort_if(optional($service)->is_active != 1, 404);
     $images = [
         $service->image1 ?? null,
         $service->image2 ?? null,
