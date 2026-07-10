@@ -89,7 +89,7 @@
                 <p style="color: #666; font-size: 16px;">We provide our services across multiple locations!</p>
             </div>
 
-            {{-- <div class="service-areas-container" style="display: flex; flex-wrap: wrap; gap: 25px; justify-content: center;">
+            <div class="service-areas-container" style="display: flex; flex-wrap: wrap; gap: 25px; justify-content: center;">
                 @foreach($areas as $area)
                     <div class="service-area-item" style="width: 300px; text-align: center; border: 1px solid #eee; border-radius: 16px; padding: 20px; background: #fafafa; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer;">
                         @if($area->image)
@@ -101,7 +101,7 @@
                         <p style="font-size: 15px; color: #555; line-height: 1.6;">{{ $area->description }}</p>
                     </div>
                 @endforeach
-            </div> --}}
+            </div>
         </div>
     </div>
 
