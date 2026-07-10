@@ -1,7 +1,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/css-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/css-animate.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/css-magnific-popup.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/css-fontawesome-all.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p1Cm1XjV4QX2j8p6bX7+9b0V0Q2+1Yx3V9q5bV6sQ9Yt1nG1j6k5u1yZ4s8g7h6a9p3R2d6f1e0b3c4d5e6f7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ asset('assets/css/css-aos.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/css-nice-select.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/css-flaticon.css') }}">
