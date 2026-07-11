@@ -68,7 +68,7 @@
         <div class="academic-area pt-100 pb-70">
             <div class="container">
                 <div class="section-title">
-                    <h2>Our Partner Universities</h2>
+                    <h2>Our Partners</h2>
                 </div>
                 <div id="universityCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
                     <div class="carousel-inner">
@@ -99,7 +99,7 @@
             </div>
         </div>
     </div>
-    <div id="rs-faq" class="faq-area ptb-100">
+    {{-- <div id="rs-faq" class="faq-area ptb-100">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -157,5 +157,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
