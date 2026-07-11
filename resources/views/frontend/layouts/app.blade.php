@@ -2,6 +2,7 @@
 <html class="no-js" lang="en">
 
 <!-- Mirrored from demo.xpeedstudio.com/html/charitypress/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 05 Jan 2023 07:49:13 GMT -->
+{{-- new design for footer and header --}}
 
 <head>
     <meta charset="utf-8">
@@ -46,75 +47,82 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- This stylesheet dynamically changed from style.less -->
 
-@php
-    $phone = get_setting('office_phone');
-@endphp
+    @php
+        $phone = get_setting('office_phone');
+    @endphp
 
     <meta name="google-site-verification" content="W0apjtnnwb19hnHEXcsi6wq3R6GgJpFbAGQjakbqKBc" />
 
 
 
     <!-- WhatsApp Floating Chat -->
-<div id="whatsapp-popup">
-    <p>👋 Hi there! Need help? <br> Chat with us on WhatsApp.</p>
-</div>
+    <div id="whatsapp-popup">
+        <p>👋 Hi there! Need help? <br> Chat with us on WhatsApp.</p>
+    </div>
 
-<a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $phone) }}" target="_blank" id="whatsapp-chat-btn">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat on WhatsApp">
-</a>
+    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $phone) }}" target="_blank" id="whatsapp-chat-btn">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat on WhatsApp">
+    </a>
 
-<style>
+    <style>
+        /* Floating Button */
+        #whatsapp-chat-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 40px;
+            background: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
 
+        #whatsapp-chat-btn img {
+            width: 35px;
+            height: 35px;
+        }
 
-    /* Floating Button */
-    #whatsapp-chat-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 40px;
-        background: #25D366;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        z-index: 9999;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-    }
-    #whatsapp-chat-btn img {
-        width: 35px;
-        height: 35px;
-    }
-    #whatsapp-chat-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
+        #whatsapp-chat-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
 
-    /* Static Popup Message */
-    #whatsapp-popup {
-        position: fixed;
-        bottom: 90px;
-        right: 50px;
-        background: #fff;
-        color: #333;
-        border-radius: 8px;
-        font-size: 14px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        z-index: 9998;
-        max-width: 200px;
-        border-left: 4px solid #25D366;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        animation: fadeIn 0.5s ease;
-    }
+        /* Static Popup Message */
+        #whatsapp-popup {
+            position: fixed;
+            bottom: 90px;
+            right: 50px;
+            background: #fff;
+            color: #333;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 9998;
+            max-width: 200px;
+            border-left: 4px solid #25D366;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            animation: fadeIn 0.5s ease;
+        }
 
-    /* Popup Animation */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
+        /* Popup Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 
 
 
