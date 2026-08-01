@@ -48,8 +48,11 @@ class ContactController extends Controller
   public function show(Request $request, $id)
   {
     $contact = Contact::findOrFail($id);
+    
+    $contact->is_view = 1;
+    $contact->save();
 
-    return view('backend.includes.header', compact('contact', $contact));
+    return view('backend.messaging.contact.show', compact('contact'));
   }
 
   /**

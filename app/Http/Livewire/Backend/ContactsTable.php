@@ -29,7 +29,14 @@ class ContactsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Message', 'message')
                 ->searchable(),
-
+            Column::make('Status', 'is_view')
+                ->format(function ($value, $column, $row) {
+                    if ($row->is_view == 1) {
+                        return '<span class="badge badge-success px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Viewed</span>';
+                    }
+                    return '<span class="badge badge-warning text-dark px-2 py-1"><i class="fas fa-envelope mr-1"></i> Unread</span>';
+                })
+                ->asHtml(),
             Column::make(__('Action'), 'action')
                 ->format(function ($value, $column, $row) {
                     return view('backend.messaging.contact.includes.actions')->withcontact($row);
