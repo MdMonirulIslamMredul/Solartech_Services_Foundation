@@ -44,4 +44,5 @@ yarn-error.log
 _sql/*.sql
 *.sql
 !database/migrations/*.sql
+*.zip
 
