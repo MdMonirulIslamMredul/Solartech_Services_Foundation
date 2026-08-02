@@ -1,926 +1,993 @@
+@php
+    $services = DB::table('services')->where('is_active', 1)->latest()->get();
+    $isHomePage = request()->is('/');
+@endphp
+
 <style>
-    .navbar-area {
-        position: absolute;
+    /* ═══════════════════════════════════════════════════════
+       MODERN PROFESSIONAL HEADER — Solartech Services
+       Color Theme: Navy #1B3A6B | Cyan #29A9E0
+       ═══════════════════════════════════════════════════════ */
+
+    /* ── Google Font ── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    /* ── Top Info Bar ── */
+    .hdr-topbar {
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        z-index: 999;
-        background: rgba(43, 48, 58, 0.28) !important;
-        padding: 0.65rem 0;
-        transition: all 0.3s ease;
+        z-index: 10000;
+        background: linear-gradient(90deg, rgb(14, 30, 74) 0%, rgb(20, 44, 82) 60%, rgb(14, 75, 117) 100%);
+        padding: 7px 0;
+        font-family: 'Inter', sans-serif;
+        border-bottom: 1px solid rgba(41, 169, 224, 0.2);
+        transition: transform 0.35s ease, opacity 0.35s ease;
+        will-change: transform;
     }
 
-    .navbar-area.scrolled {
-        position: fixed;
-        background: rgba(43, 48, 58, 0.97) !important;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-        padding: 0.65rem 0;
+    .hdr-topbar.hdr-topbar-hidden {
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
     }
 
-    .navbar-area .navbar-nav {
+    .hdr-topbar-inner {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        justify-content: space-between;
+        gap: 1rem;
         flex-wrap: wrap;
     }
 
-    .navbar-area .navbar-nav .nav-item {
-        position: relative;
-    }
-
-    .navbar-area .navbar-nav .nav-link {
-        color: #ffffff !important;
-        font-size: 0.96rem;
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        padding: 0.75rem 0.9rem;
-        border-radius: 999px;
-        transition: all 0.2s ease;
-        text-transform: none;
-    }
-
-    .navbar-area .navbar-brand img,
-    .mobile-responsive-menu .logo img {
-        background: #ffffff;
-        padding: 0.35rem 0.45rem;
-        border-radius: 10px;
-        max-height: 50px;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-    }
-
-    .navbar-area .navbar-nav .nav-link:hover,
-    .navbar-area .navbar-nav .nav-link:focus,
-    .navbar-area .navbar-nav .nav-item.active .nav-link {
-        background: rgba(255, 209, 102, 0.16);
-        color: var(--nt-accent, #FFD166) !important;
-        transform: translateY(-1px);
-    }
-
-    /* Note: the base theme's style.css defines a very high-specificity
-       ".desktop-nav .navbar .navbar-nav .nav-item .dropdown-menu li a" rule
-       (fixed width, line-height:1, dashed border-bottom) that would otherwise
-       clip/compress project titles. Every property below is flagged
-       !important so this component's design always wins regardless of
-       selector specificity or load order. */
-    .navbar-area .navbar-nav .dropdown-menu,
-    .desktop-nav .navbar .navbar-nav .nav-item .dropdown-menu {
-        background: var(--nt-surface, #ffffff) !important;
-        border: none !important;
-        border-top: 3px solid var(--nt-accent, #FFD166) !important;
-        border-radius: 10px !important;
-        box-shadow: 0 20px 45px rgba(26, 28, 32, 0.22) !important;
-        margin-top: 0.85rem !important;
-        top: 100% !important;
-        min-width: 280px !important;
-        max-width: 360px !important;
-        width: max-content !important;
-        display: block !important;
-        padding: 0.5rem !important;
-        max-height: 420px !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        transform: translateY(8px);
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
-    }
-
-    .navbar-area .navbar-nav .dropdown-menu::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .navbar-area .navbar-nav .dropdown-menu::-webkit-scrollbar-thumb {
-        background: var(--nt-border, #DDE1E6);
-        border-radius: 6px;
-    }
-
-    .navbar-area .navbar-nav .dropdown-menu::before {
-        display: none !important;
-        content: none !important;
-    }
-
-    .navbar-area .nav-item.dropdown.show .dropdown-menu,
-    .navbar-area .nav-item.dropdown:hover .dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
-
-    .navbar-area .dropdown-submenu {
-        position: relative;
-    }
-
-    .navbar-area .dropdown-submenu>.dropdown-menu {
-        position: absolute !important;
-        top: 0 !important;
-        left: 100% !important;
-        margin: 0 !important;
-        min-width: 220px !important;
-        max-width: 280px !important;
-        padding: 0.5rem !important;
-        box-shadow: 0 18px 35px rgba(26, 28, 32, 0.18) !important;
-        border-radius: 10px !important;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateX(15px);
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
-    }
-
-    .navbar-area .dropdown-submenu:hover>.dropdown-menu,
-    .navbar-area .dropdown-submenu.show>.dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(0);
-    }
-
-    .navbar-area .dropdown-item,
-    .navbar-area .dropdown-menu li a,
-    .desktop-nav .navbar .navbar-nav .nav-item .dropdown-menu li a {
-        display: block !important;
-        color: var(--nt-dark, #1A1C20) !important;
-        padding: 0.7rem 0.9rem !important;
-        margin: 0.15rem 0 !important;
-        border-radius: 8px !important;
-        border: none !important;
-        border-bottom: none !important;
-        border-left: 3px solid transparent !important;
-        font-size: 0.92rem !important;
-        font-weight: 600 !important;
-        line-height: 1.4 !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-        overflow-wrap: anywhere !important;
-        text-overflow: clip !important;
-        overflow: visible !important;
-        transition: all 0.2s ease;
-        background: transparent !important;
-        width: 100% !important;
-    }
-
-    .navbar-area .dropdown-menu li {
-        padding: 0 !important;
-    }
-
-    .navbar-area .dropdown-item+.dropdown-item,
-    .navbar-area .dropdown-menu li+li {
-        border-top: 1px solid var(--nt-border, #DDE1E6) !important;
-        margin-top: 0.15rem !important;
-        padding-top: 0.7rem;
-    }
-
-    .navbar-area .dropdown-item:hover,
-    .navbar-area .dropdown-item:focus,
-    .navbar-area .dropdown-item:active,
-    .navbar-area .dropdown-item.active,
-    .navbar-area .dropdown-menu li a:hover,
-    .navbar-area .dropdown-menu li a:focus,
-    .navbar-area .projects-status-item:hover,
-    .navbar-area .projects-status-item:focus {
-        background: var(--nt-accent-10, rgba(255, 209, 102, 0.14)) !important;
-        color: var(--nt-dark, #1A1C20) !important;
-        border-left-color: var(--nt-accent, #FFD166) !important;
-        transform: translateX(3px);
-    }
-
-    .navbar-area .dropdown-toggle.custom-arrow {
-        position: relative;
-        padding-right: 2rem;
-    }
-
-    .projects-dropdown {
-        min-width: auto !important;
-        width: auto !important;
-        max-width: none !important;
-        padding: 0 !important;
-        overflow: visible !important;
-    }
-
-    .navbar-area .navbar-nav .dropdown-menu.projects-dropdown,
-    .desktop-nav .navbar .navbar-nav .nav-item .dropdown-menu.projects-dropdown,
-    .dropdown-menu.projects-dropdown {
-        position: absolute !important;
-        left: 0 !important;
-        right: auto !important;
-        display: block !important;
-        max-width: none !important;
-        min-width: 640px !important;
-        width: auto !important;
-        overflow: visible !important;
-        padding: 0 !important;
-        white-space: normal !important;
-        max-height: none !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        background: transparent !important;
-    }
-
-    .projects-dropdown-panel {
-        display: grid !important;
-        grid-template-columns: 220px 0fr !important;
-        gap: 1rem !important;
-        padding: 1rem !important;
-        background: transparent !important;
-        border: none !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        min-width: 700px !important;
-        max-width: 980px !important;
-        width: 100% !important;
-    }
-
-    .projects-dropdown-panel.active-status {
-        grid-template-columns: 220px minmax(380px, 1fr) !important;
-    }
-
-    .projects-status-list {
+    .hdr-topbar-left {
         display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        min-width: 220px;
-        background: #ffffff;
-        border: 1px solid #e5e8ec;
-        border-radius: 18px;
-        padding: 0.8rem;
-        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
-        min-height: 220px;
+        align-items: center;
+        gap: 1.4rem;
+        flex-wrap: wrap;
     }
 
-    .projects-status-tab {
-        appearance: none;
-        background: #f8f9fb;
-        border: 1px solid #e5e8ec;
-        border-radius: 12px;
-        color: #252a31;
-        font-weight: 700;
-        padding: 0.85rem 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        white-space: nowrap;
-        width: 100%;
+    .hdr-topbar-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .hdr-topbar-item i {
+        color: #29A9E0;
+        font-size: 14px;
+    }
+
+    .hdr-topbar-item:hover {
+        color: #29A9E0;
+        text-decoration: none;
+    }
+
+    .hdr-topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .hdr-social-link {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 54px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff !important;
+        font-size: 13px;
+        text-decoration: none !important;
+        transition: all 0.25s ease;
+        border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
-    .projects-status-tab.active {
-        background: #ffffff;
-        border-color: #ffd166;
-        box-shadow: inset 0 0 0 1px #ffd166;
-        color: #1a1c20;
+    .hdr-social-link:hover {
+        background: #29A9E0;
+        border-color: #29A9E0;
+        transform: translateY(-2px);
+        color: #fff !important;
     }
 
-    .projects-status-content {
+    /* ── Main Navbar ── */
+    .hdr-navbar {
+        position: fixed;
+        top: 37px;
+        /* sits below the topbar; JS will recalculate */
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        background: #fff;
+        box-shadow: 0 2px 20px rgba(27, 58, 107, 0.10);
+        font-family: 'Inter', sans-serif;
+        transition: background 0.35s ease, box-shadow 0.35s ease, top 0.35s ease;
+    }
+
+    .hdr-navbar.hdr-scrolled {
+        background: #fff;
+        box-shadow: 0 6px 32px rgba(27, 58, 107, 0.20);
+    }
+
+    /* ── Transparent state (hero at top) ── */
+    .hdr-navbar.hdr-transparent {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* Nav links — white when transparent */
+    .hdr-navbar.hdr-transparent .hdr-nav-link {
+        color: rgba(255, 255, 255, 0.92) !important;
+    }
+
+    .hdr-navbar.hdr-transparent .hdr-nav-link:hover,
+    .hdr-navbar.hdr-transparent .hdr-nav-link:focus,
+    .hdr-navbar.hdr-transparent .hdr-nav-link.hdr-active {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hdr-navbar.hdr-transparent .hdr-nav-link::after {
+        background: #fff;
+    }
+
+    /* Hamburger bars — white when transparent */
+    .hdr-navbar.hdr-transparent .hdr-ham-bar {
+        background: #fff;
+    }
+
+    .hdr-navbar.hdr-transparent .hdr-hamburger {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .hdr-navbar-inner {
         display: flex;
-        flex: 1 1 auto;
-        min-width: 320px;
-        align-items: flex-start;
-        background: #ffffff;
-        border: 1px solid #e5e8ec;
-        border-radius: 18px;
-        padding: 0.8rem;
-        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        height: 88px;
+    }
+
+    /* ── Logo ── */
+    .hdr-logo a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    .hdr-logo img {
+        height: 64px;
+        max-height: 64px;
+        width: auto;
+        object-fit: contain;
+        background: #fff;
+        padding: 4px 6px;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .hdr-logo img:hover {
+        transform: scale(1.03);
+    }
+
+    /* ── Desktop Nav Links ── */
+    .hdr-nav {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .hdr-nav-item {
+        position: relative;
+    }
+
+    .hdr-nav-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 15px;
+        color: #1B3A6B !important;
+        font-size: 14.5px;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none !important;
+        transition: all 0.22s ease;
+        white-space: nowrap;
+        position: relative;
+    }
+
+    .hdr-nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: calc(100% - 24px);
+        height: 2.5px;
+        background: #29A9E0;
+        border-radius: 2px;
+        transition: transform 0.25s ease;
+    }
+
+    .hdr-nav-link:hover,
+    .hdr-nav-link:focus {
+        color: #29A9E0 !important;
+        background: rgba(41, 169, 224, 0.07);
+    }
+
+    .hdr-nav-link:hover::after {
+        transform: translateX(-50%) scaleX(1);
+    }
+
+    /* Active state */
+    .hdr-nav-link.hdr-active {
+        color: #29A9E0 !important;
+        background: rgba(41, 169, 224, 0.09);
+    }
+
+    .hdr-nav-link.hdr-active::after {
+        transform: translateX(-50%) scaleX(1);
+    }
+
+    /* ── Dropdown chevron ── */
+    .hdr-chevron {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        transition: transform 0.25s ease;
+        opacity: 0.7;
+        flex-shrink: 0;
+    }
+
+    .hdr-nav-item:hover .hdr-chevron,
+    .hdr-nav-item.hdr-open .hdr-chevron {
+        transform: rotate(180deg);
+        opacity: 1;
+    }
+
+    /* ── Dropdown Panel ── */
+    .hdr-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(-6px);
+        min-width: 260px;
+        max-width: 320px;
+        background: #fff;
+        border: 1px solid rgba(27, 58, 107, 0.08);
+        border-top: 3px solid #29A9E0;
+        border-radius: 14px;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+        padding: 8px;
         opacity: 0;
         visibility: hidden;
-        width: 0;
-        padding: 0;
-        overflow: hidden;
-        transition: all 0.2s ease;
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+        z-index: 100;
+        max-height: 440px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
-    .projects-dropdown-panel.active-status .projects-status-content {
+    .hdr-dropdown::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .hdr-dropdown::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 4px;
+    }
+
+    .hdr-nav-item:hover .hdr-dropdown,
+    .hdr-nav-item.hdr-open .hdr-dropdown {
         opacity: 1;
         visibility: visible;
-        width: auto;
-        padding: 0.8rem;
+        transform: translateX(-50%) translateY(0);
     }
 
-    .projects-status-panel {
-        display: none;
-        width: 100%;
-        gap: 0.75rem;
-    }
-
-    .projects-status-panel.active {
-        display: block;
-    }
-
-    .projects-status-panel-header {
-        font-size: 0.96rem;
-        font-weight: 700;
-        color: #1a1c20;
-        margin-bottom: 0.75rem;
-    }
-
-    .projects-status-content {
-        min-height: 240px;
-    }
-
-    .projects-status-items {
-        display: grid;
-        gap: 0.55rem;
-    }
-
-    .projects-status-item {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: #f8f9fb !important;
-        color: #252a31 !important;
-        padding: 0.85rem 0.95rem !important;
-        border-radius: 12px !important;
-        border: 1px solid #e5e8ec !important;
+    .hdr-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        border-radius: 9px;
+        color: #1e293b !important;
+        font-size: 13.5px;
+        font-weight: 600;
         text-decoration: none !important;
-        font-weight: 600 !important;
-        transition: all 0.2s ease !important;
-        white-space: nowrap !important;
-        width: auto !important;
-        max-width: 100% !important;
-        min-height: 52px;
+        transition: all 0.2s ease;
+        margin-bottom: 2px;
     }
 
-    .projects-status-item:hover,
-    .projects-status-item:focus {
-        background: #fff9e6 !important;
-        border-color: #ffd166 !important;
-        color: #1a1c20 !important;
-        transform: translateX(2px) !important;
+    .hdr-dropdown-item-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        background: rgba(27, 58, 107, 0.07);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: #1B3A6B;
+        flex-shrink: 0;
+        transition: all 0.2s;
     }
 
-    .projects-status-empty {
+    .hdr-dropdown-item:hover {
+        background: rgba(41, 169, 224, 0.08);
+        color: #29A9E0 !important;
+        padding-left: 16px;
+    }
+
+    .hdr-dropdown-item:hover .hdr-dropdown-item-icon {
+        background: rgba(41, 169, 224, 0.12);
+        color: #29A9E0;
+    }
+
+    /* ── Phone CTA Pill Button ── */
+    .hdr-call-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #1B3A6B;
+        color: #fff !important;
+        padding: 7px 8px 7px 18px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 14px;
+        white-space: nowrap;
+        text-decoration: none !important;
+        transition: all 0.28s ease;
+        box-shadow: 0 4px 16px rgba(27, 58, 107, 0.3);
+        border: 2px solid transparent;
+        flex-shrink: 0;
+    }
+
+    .hdr-call-btn:hover {
+        background: #29A9E0;
+        box-shadow: 0 6px 22px rgba(41, 169, 224, 0.45);
+        transform: translateY(-2px);
+        color: #fff !important;
+    }
+
+    .hdr-call-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(41, 169, 224, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        transition: background 0.25s;
+        flex-shrink: 0;
+    }
+
+    .hdr-call-btn:hover .hdr-call-icon {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ══════════════════════════════════
+       MOBILE MENU
+       ══════════════════════════════════ */
+    .hdr-hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(27, 58, 107, 0.08);
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.2s;
+        flex-shrink: 0;
+    }
+
+    .hdr-hamburger:hover {
+        background: rgba(27, 58, 107, 0.14);
+    }
+
+    .hdr-hamburger:focus {
+        outline: none;
+    }
+
+    .hdr-ham-bar {
         display: block;
-        padding: 1rem;
-        background: #fbfbfb;
-        border: 1px dashed #dbe2e8;
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+        background: #1B3A6B;
+        transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+    }
+
+    .hdr-hamburger.is-open .hdr-ham-bar:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .hdr-hamburger.is-open .hdr-ham-bar:nth-child(2) {
+        opacity: 0;
+        width: 0;
+    }
+
+    .hdr-hamburger.is-open .hdr-ham-bar:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile Drawer — Top Dropdown */
+    .hdr-mobile-drawer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 88vh;
+        background: #fff;
+        z-index: 99998;
+        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.25);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, visibility 0.35s;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .hdr-mobile-drawer.is-open {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .hdr-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid #e8edf5;
+        background: linear-gradient(135deg, rgb(20, 44, 82), rgb(14, 75, 117));
+    }
+
+    .hdr-drawer-logo img {
+        height: 42px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 3px 5px;
+        border-radius: 7px;
+    }
+
+    .hdr-drawer-close {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        line-height: 1;
+    }
+
+    .hdr-drawer-close:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .hdr-drawer-body {
+        padding: 16px 14px;
+        flex: 1;
+    }
+
+    .hdr-mobile-nav {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .hdr-mobile-nav-item {
+        margin-bottom: 6px;
+    }
+
+    .hdr-mobile-nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-radius: 10px;
+        color: #1B3A6B !important;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none !important;
+        background: #f5f7fb;
+        border: 1px solid #e2e8f0;
+        transition: all 0.22s ease;
+        cursor: pointer;
+        width: 100%;
+        border: 1px solid #e8edf5;
+    }
+
+    .hdr-mobile-nav-link:hover,
+    .hdr-mobile-nav-link.hdr-mob-active {
+        background: #1B3A6B;
+        color: #fff !important;
+        border-color: #1B3A6B;
+    }
+
+    .hdr-mobile-sub-arrow {
+        font-size: 13px;
+        transition: transform 0.25s;
+        flex-shrink: 0;
+    }
+
+    .hdr-mobile-sub-arrow.rotated {
+        transform: rotate(180deg);
+    }
+
+    .hdr-mobile-submenu {
+        display: none;
+        list-style: none;
+        margin: 6px 0 0;
+        padding: 6px;
+        background: #f8fafc;
+        border: 1px solid #e8edf5;
+        border-radius: 10px;
+    }
+
+    .hdr-mobile-submenu.is-open {
+        display: block;
+    }
+
+    .hdr-mobile-submenu li {
+        margin-bottom: 4px;
+    }
+
+    .hdr-mobile-submenu a {
+        display: block;
+        padding: 9px 14px;
+        border-radius: 7px;
+        color: #334155 !important;
+        font-size: 13.5px;
+        font-weight: 500;
+        text-decoration: none !important;
+        background: #fff;
+        border: 1px solid #e8edf5;
+        transition: all 0.2s;
+    }
+
+    .hdr-mobile-submenu a:hover {
+        background: rgba(41, 169, 224, 0.1);
+        color: #29A9E0 !important;
+        border-color: #29A9E0;
+    }
+
+    .hdr-drawer-call {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        margin-top: 10px;
+        background: linear-gradient(135deg, #1B3A6B, #29A9E0);
         border-radius: 12px;
-        color: #6b7280;
+        color: #fff !important;
+        font-weight: 700;
+        font-size: 15px;
+        text-decoration: none !important;
+        transition: opacity 0.2s;
     }
 
-    .navbar-area .dropdown-toggle.custom-arrow::after {
-        content: "▾";
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.86rem;
-        color: inherit;
-        transition: transform 0.2s ease;
+    .hdr-drawer-call:hover {
+        opacity: 0.92;
+        color: #fff !important;
     }
 
-    .navbar-area .nav-item.dropdown.show .dropdown-toggle.custom-arrow::after,
-    .navbar-area .nav-item.dropdown:hover .dropdown-toggle.custom-arrow::after {
-        transform: translateY(-50%) rotate(180deg);
+    .hdr-drawer-call i {
+        font-size: 18px;
     }
 
-    /* ==========================================================
-       Mobile navigation (self-contained: no meanmenu dependency)
-       ========================================================== */
-    @media only screen and (max-width: 991px) {
-        .navbar-area {
-            position: relative;
-            background: rgba(241, 243, 245, 0.98) !important;
-            padding: 0;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    /* Mobile overlay */
+    .hdr-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 20, 50, 0.55);
+        z-index: 99997;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.35s, visibility 0.35s;
+        backdrop-filter: blur(2px);
+    }
+
+    .hdr-overlay.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* ── Responsive breakpoints ── */
+    @media (max-width: 991px) {
+        .hdr-topbar-left .hdr-topbar-item:not(:first-child) {
+            display: none;
         }
 
-        .mobile-responsive-nav {
-            z-index: 1100;
+        .hdr-desktop-nav,
+        .hdr-call-btn {
+            display: none !important;
         }
 
-        .mobile-responsive-menu {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-            padding: 0.55rem 0;
-        }
-
-        .mobile-responsive-menu .logo {
-            display: flex;
-            align-items: center;
-            min-width: 0;
-        }
-
-        .mobile-responsive-menu .logo img {
-            max-height: 42px;
-        }
-
-        /* Hamburger toggler */
-        .mobile-nav-toggler {
+        .hdr-hamburger {
             display: inline-flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            flex-shrink: 0;
-            width: 44px;
-            height: 44px;
-            border: none;
-            border-radius: 12px;
-            background: rgba(43, 48, 58, 0.08);
-            cursor: pointer;
-            padding: 0;
-            transition: background 0.2s ease;
         }
 
-        .mobile-nav-toggler:hover,
-        .mobile-nav-toggler:focus {
-            background: rgba(43, 48, 58, 0.14);
-            outline: none;
-        }
-
-        .mobile-nav-toggler .line {
-            display: block;
-            width: 22px;
-            height: 2px;
-            border-radius: 2px;
-            background: var(--nt-secondary, #2B303A);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .mobile-nav-toggler:not(.collapsed) .line1 {
-            transform: translateY(7px) rotate(45deg);
-        }
-
-        .mobile-nav-toggler:not(.collapsed) .line2 {
-            opacity: 0;
-        }
-
-        .mobile-nav-toggler:not(.collapsed) .line3 {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-
-        /* Mobile menu panel */
-        .mobile-nav-menu {
-            border-top: 1px solid rgba(15, 23, 42, 0.08);
-        }
-
-        .mobile-nav-list {
-            list-style: none;
-            margin: 0;
-            padding: 0.75rem 0 1rem;
-            max-height: calc(100vh - 90px);
-            overflow-y: auto;
-        }
-
-        .mobile-nav-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .mobile-nav-list::-webkit-scrollbar-thumb {
-            background: rgba(15, 23, 42, 0.15);
-            border-radius: 6px;
-        }
-
-        .mobile-nav-list>li {
-            padding: 0 0.75rem;
-            margin-bottom: 0.45rem;
-        }
-
-        .mobile-nav-link {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border-radius: 12px;
-            background: var(--nt-primary-50, #FAFBFC);
-            border: 1px solid var(--nt-border, #DDE1E6);
-            color: var(--nt-dark, #1A1C20) !important;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .mobile-nav-link:hover,
-        .mobile-nav-link:focus {
-            background: var(--nt-accent, #FFD166);
-            border-color: var(--nt-accent, #FFD166);
-            color: var(--nt-dark, #1A1C20) !important;
-        }
-
-        /* Submenu (Projects) accordion */
-        .mobile-nav-item-has-children .mobile-nav-link .submenu-arrow {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-            transition: transform 0.25s ease;
-            font-size: 1rem;
-        }
-
-        .mobile-nav-item-has-children .mobile-nav-link:not(.collapsed) {
-            background: var(--nt-accent-25, rgba(255, 209, 102, 0.25));
-            border-color: var(--nt-accent, #FFD166);
-        }
-
-        .mobile-nav-item-has-children .mobile-nav-link:not(.collapsed) .submenu-arrow {
-            transform: rotate(180deg);
-        }
-
-        .mobile-submenu-list {
-            list-style: none;
-            margin: 0.5rem 0 0;
-            padding: 0.6rem;
-            background: var(--nt-primary-50, #FAFBFC);
-            border: 1px solid var(--nt-border, #DDE1E6);
-            border-radius: 12px;
-            max-height: 260px;
-            overflow-y: auto;
-        }
-
-        .mobile-submenu-list::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .mobile-submenu-list::-webkit-scrollbar-thumb {
-            background: rgba(15, 23, 42, 0.15);
-            border-radius: 5px;
-        }
-
-        .mobile-submenu-list li+li {
-            margin-top: 0.4rem;
-        }
-
-        .mobile-submenu-list a {
-            display: block;
-            padding: 0.7rem 0.9rem;
-            border-radius: 9px;
-            background: var(--nt-surface, #ffffff);
-            border: 1px solid var(--nt-border, #DDE1E6);
-            color: var(--nt-dark, #1A1C20);
-            font-size: 0.88rem;
-            font-weight: 500;
-            text-decoration: none;
-            word-break: break-word;
-        }
-
-        .mobile-submenu-list a:hover,
-        .mobile-submenu-list a:focus {
-            background: var(--nt-accent-25, rgba(255, 209, 102, 0.25));
-            border-color: var(--nt-accent, #FFD166);
-        }
-
-        .mobile-submenu-status {
-            margin-bottom: 0.5rem;
-        }
-
-        .mobile-submenu-status>.mobile-nav-link {
-            background: var(--nt-surface, #ffffff);
-            border: 1px solid var(--nt-border, #DDE1E6);
-            border-radius: 9px;
-            padding: 0.7rem 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--nt-dark, #1A1C20);
-        }
-
-        .mobile-submenu-status .mobile-submenu-list {
-            margin-top: 0.5rem;
-            padding-left: 0.5rem;
-            border-left: 3px solid var(--nt-accent, #FFD166);
-        }
-
-        .mobile-submenu-empty {
-            display: block;
-            padding: 0.65rem 0.9rem;
-            color: var(--nt-text-muted, #6B7280);
-            font-size: 0.85rem;
+        .hdr-navbar-inner {
+            height: 76px;
         }
     }
 
-    /* The full desktop nav is hidden on mobile by the theme's responsive.css,
-       so no additional overrides are required for .desktop-nav below 992px. */
+    @media (max-width: 575px) {
+        .hdr-topbar {
+            display: none;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .hdr-hamburger {
+            display: none;
+        }
+
+        .hdr-mobile-drawer,
+        .hdr-overlay {
+            display: none !important;
+        }
+    }
 </style>
 
-
-
-
-<div class="navbar-area nav-bg-1 pb-10">
-    @php
-        $pendingProjects = DB::table('projects')->where('is_active', 1)->where('status', 1)->latest()->get();
-        $runningProjects = DB::table('projects')->where('is_active', 1)->where('status', 2)->latest()->get();
-        $completeProjects = DB::table('projects')->where('is_active', 1)->where('status', 3)->latest()->get();
-        $services = DB::table('services')->where('is_active', 1)->latest()->get();
-    @endphp
-
-    <div class="mobile-responsive-nav">
-        <div class="container">
-            <div class="mobile-responsive-menu">
-                <div class="logo">
-                    <a href="/">
-                        <img src="{{ asset(get_setting('frontend_logo_menu')) }}" class="main-logo" alt="logo">
-                        <img src="{{ asset(get_setting('frontend_logo_menu')) }}" class="white-logo" alt="logo">
-                    </a>
-                </div>
-
-                <button class="mobile-nav-toggler collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#mobileNavMenu" aria-controls="mobileNavMenu" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="line line1"></span>
-                    <span class="line line2"></span>
-                    <span class="line line3"></span>
-                </button>
-            </div>
-
-            <div class="collapse mobile-nav-menu" id="mobileNavMenu">
-                <ul class="mobile-nav-list">
-                    <li>
-                        <a class="mobile-nav-link" href="/">Home</a>
-                    </li>
-                    <li>
-                        <a class="mobile-nav-link" href="{{ route('about.index') }}">About Us</a>
-                    </li>
-
-                    <li class="mobile-nav-item-has-children">
-                        <a class="mobile-nav-link collapsed" href="#mobileProjectsSubmenu" data-bs-toggle="collapse"
-                            role="button" aria-expanded="false" aria-controls="mobileProjectsSubmenu">
-                            Projects
-                            <span class="submenu-arrow">▾</span>
-                        </a>
-                        <div class="collapse" id="mobileProjectsSubmenu">
-                            <div class="mobile-submenu-list">
-                                <div class="mobile-submenu-status">
-                                    <a class="mobile-nav-link collapsed" href="#mobilePendingProjects"
-                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
-                                        aria-controls="mobilePendingProjects">
-                                        Pending
-                                        <span class="submenu-arrow">▾</span>
-                                    </a>
-                                    <div class="collapse" id="mobilePendingProjects">
-                                        <ul class="mobile-submenu-list">
-                                            @foreach ($pendingProjects as $project)
-                                                <li>
-                                                    <a href="/study_destination/{{ $project->id }}">
-                                                        {{ $project->title }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="mobile-submenu-status">
-                                    <a class="mobile-nav-link collapsed" href="#mobileRunningProjects"
-                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
-                                        aria-controls="mobileRunningProjects">
-                                        Running
-                                        <span class="submenu-arrow">▾</span>
-                                    </a>
-                                    <div class="collapse" id="mobileRunningProjects">
-                                        <ul class="mobile-submenu-list">
-                                            @foreach ($runningProjects as $project)
-                                                <li>
-                                                    <a href="/study_destination/{{ $project->id }}">
-                                                        {{ $project->title }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="mobile-submenu-status">
-                                    <a class="mobile-nav-link collapsed" href="#mobileCompleteProjects"
-                                        data-bs-toggle="collapse" role="button" aria-expanded="false"
-                                        aria-controls="mobileCompleteProjects">
-                                        Complete
-                                        <span class="submenu-arrow">▾</span>
-                                    </a>
-                                    <div class="collapse" id="mobileCompleteProjects">
-                                        <ul class="mobile-submenu-list">
-                                            @foreach ($completeProjects as $project)
-                                                <li>
-                                                    <a href="/study_destination/{{ $project->id }}">
-                                                        {{ $project->title }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <a class="mobile-nav-link" href="/service">Services</a>
-                    </li>
-                    <li>
-                        <a class="mobile-nav-link" href="/teams">Our Team</a>
-                    </li>
-                    <li>
-                        <a class="mobile-nav-link" href="/blogs">Blog</a>
-                    </li>
-                    <li>
-                        <a class="mobile-nav-link" href="{{ route('gallery.index') }}">Gallery</a>
-                    </li>
-                    <li>
-                        <a class="mobile-nav-link" href="/contact">Contact Us</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="desktop-nav">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-md navbar-light">
-                <a class="navbar-brand" href="/" style="margin-left: 0px;">
-                    <img src="{{ asset(get_setting('frontend_logo_menu')) }}" alt="logo"
-                        style="max-height: 50px; width: auto;">
+{{-- ═══ TOP INFO BAR ═══ --}}
+<div class="hdr-topbar">
+    <div class="container">
+        <div class="hdr-topbar-inner">
+            <div class="hdr-topbar-left">
+                <a href="mailto:{{ get_setting('office_email') }}" class="hdr-topbar-item">
+                    <i class="ri-mail-line"></i>
+                    <span>{{ get_setting('office_email') }}</span>
                 </a>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">
-                                Home
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('about.index') }}">
-                                About Us
-                            </a>
-                        </li>
-
-                        <li class="nav-item dropdown dropdown-hover">
-                            <a class="nav-link dropdown-toggle custom-arrow" href="#"
-                                id="studyDestinationDropdown" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Projects
-                            </a>
-                            <div class="dropdown-menu projects-dropdown" aria-labelledby="studyDestinationDropdown">
-                                <div class="projects-dropdown-panel">
-                                    <div class="projects-status-list">
-                                        <button type="button" class="projects-status-tab" data-status="pending">
-                                            Pending
-                                        </button>
-                                        <button type="button" class="projects-status-tab" data-status="running">
-                                            Running
-                                        </button>
-                                        <button type="button" class="projects-status-tab" data-status="complete">
-                                            Complete
-                                        </button>
-                                    </div>
-                                    <div class="projects-status-content">
-                                        <div class="projects-status-panel" data-status="pending">
-                                            <div class="projects-status-panel-header">Pending projects</div>
-                                            <div class="projects-status-items">
-                                                @forelse ($pendingProjects as $project)
-                                                    <a class="projects-status-item"
-                                                        href="/study_destination/{{ $project->id }}">
-                                                        {{ $project->title }}
-                                                    </a>
-                                                @empty
-                                                    <span class="projects-status-empty">No pending projects</span>
-                                                @endforelse
-                                            </div>
-                                        </div>
-                                        <div class="projects-status-panel" data-status="running">
-                                            <div class="projects-status-panel-header">Running projects</div>
-                                            <div class="projects-status-items">
-                                                @forelse ($runningProjects as $project)
-                                                    <a class="projects-status-item"
-                                                        href="/study_destination/{{ $project->id }}">
-                                                        {{ $project->title }}
-                                                    </a>
-                                                @empty
-                                                    <span class="projects-status-empty">No running projects</span>
-                                                @endforelse
-                                            </div>
-                                        </div>
-                                        <div class="projects-status-panel" data-status="complete">
-                                            <div class="projects-status-panel-header">Complete projects</div>
-                                            <div class="projects-status-items">
-                                                @forelse ($completeProjects as $project)
-                                                    <a class="projects-status-item"
-                                                        href="/study_destination/{{ $project->id }}">
-                                                        {{ $project->title }}
-                                                    </a>
-                                                @empty
-                                                    <span class="projects-status-empty">No complete projects</span>
-                                                @endforelse
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/service">
-                                Services
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/teams">
-                                Our Team
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/blogs">
-                                Blog
-                            </a>
-                        </li>
-
-                        {{-- Gallery option --}}
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('gallery.index') }}">
-                                Gallery
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/contact">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', get_setting('office_phone')) }}" class="hdr-topbar-item">
+                    <i class="ri-phone-line"></i>
+                    <span>{{ get_setting('office_phone') }}</span>
+                </a>
+                <span class="hdr-topbar-item d-none d-lg-flex">
+                    <i class="ri-map-pin-line"></i>
+                    <span>{{ get_setting('office_address') }}</span>
+                </span>
+            </div>
+            <div class="hdr-topbar-right">
+                <a href="{{ get_setting('facebook') }}" target="_blank" class="hdr-social-link" aria-label="Facebook"><i
+                        class="ri-facebook-fill"></i></a>
+                <a href="{{ get_setting('twitter') }}" target="_blank" class="hdr-social-link" aria-label="Twitter"><i
+                        class="ri-twitter-fill"></i></a>
+                <a href="{{ get_setting('instagram') }}" target="_blank" class="hdr-social-link"
+                    aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                <a href="{{ get_setting('linkedin') }}" target="_blank" class="hdr-social-link" aria-label="LinkedIn"><i
+                        class="ri-linkedin-fill"></i></a>
+            </div>
         </div>
     </div>
 </div>
 
+{{-- ═══ MAIN NAVBAR ═══ --}}
+<header class="hdr-navbar" id="hdrNavbar">
+    <div class="container">
+        <div class="hdr-navbar-inner">
+
+            {{-- Logo --}}
+            <div class="hdr-logo">
+                <a href="/">
+                    <img src="{{ asset(get_setting('frontend_logo_menu')) }}" alt="{{ app_name() }} Logo">
+                </a>
+            </div>
+
+            {{-- Desktop Navigation --}}
+            <nav class="hdr-desktop-nav" aria-label="Main Navigation">
+                <ul class="hdr-nav">
+                    <li class="hdr-nav-item">
+                        <a href="/" class="hdr-nav-link {{ request()->is('/') ? 'hdr-active' : '' }}">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="hdr-nav-item" id="servicesNavItem">
+                        <a href="/service" class="hdr-nav-link {{ request()->is('service*') ? 'hdr-active' : '' }}">
+                            Our Services
+                            <svg class="hdr-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </a>
+                        <div class="hdr-dropdown" id="servicesDropdown">
+                            @php
+                                $svcIcons = ['ri-brush-line', 'ri-building-line', 'ri-drop-line', 'ri-bug-line', 'ri-car-wash-line', 'ri-home-heart-line', 'ri-hotel-line', 'ri-tools-line', 'ri-landscape-line', 'ri-cup-line'];
+                            @endphp
+                            @foreach ($services as $idx => $svc)
+                                <a href="/service/{{ $svc->id }}" class="hdr-dropdown-item">
+                                    <span class="hdr-dropdown-item-icon"><i
+                                            class="{{ $svcIcons[$idx % count($svcIcons)] }}"></i></span>
+                                    <span>{{ $svc->title }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    </li>
+
+                    <li class="hdr-nav-item">
+                        <a href="{{ route('appointment.index') }}"
+                            class="hdr-nav-link {{ request()->is('appointment*') ? 'hdr-active' : '' }}">
+                            Book Appointment
+                        </a>
+                    </li>
+
+                    <li class="hdr-nav-item">
+                        <a href="/teams" class="hdr-nav-link {{ request()->is('team*') ? 'hdr-active' : '' }}">
+                            Our Team
+                        </a>
+                    </li>
+                    {{-- add blog page link --}}
+
+                    <li class="hdr-nav-item">
+                        <a href="/blogs" class="hdr-nav-link {{ request()->is('blogs') ? 'hdr-active' : '' }}">
+                            Blog
+                        </a>
+                    </li>
+
+                    <li class="hdr-nav-item">
+                        <a href="{{ route('gallery.index') }}"
+                            class="hdr-nav-link {{ request()->is('gallery*') ? 'hdr-active' : '' }}">
+                            Gallery
+                        </a>
+                    </li>
+                    <li class="hdr-nav-item">
+                        <a href="{{ route('about.index') }}"
+                            class="hdr-nav-link {{ request()->is('about*') ? 'hdr-active' : '' }}">
+                            About Us
+                        </a>
+                    </li>
+
+                    <li class="hdr-nav-item">
+                        <a href="/contact" class="hdr-nav-link {{ request()->is('contact*') ? 'hdr-active' : '' }}">
+                            Contact Us
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            {{-- Phone CTA + Hamburger --}}
+            <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', get_setting('office_phone', '01768044211')) }}"
+                    class="hdr-call-btn" aria-label="Call us">
+                    <span>{{ get_setting('office_phone', '01768044211') }}</span>
+                    <span class="hdr-call-icon"><i class="ri-phone-fill"></i></span>
+                </a>
+
+                <button class="hdr-hamburger" id="hdrHamburger" aria-label="Open menu" aria-expanded="false"
+                    aria-controls="hdrMobileDrawer">
+                    <span class="hdr-ham-bar"></span>
+                    <span class="hdr-ham-bar"></span>
+                    <span class="hdr-ham-bar"></span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+{{-- ═══ MOBILE OVERLAY ═══ --}}
+<div class="hdr-overlay" id="hdrOverlay" aria-hidden="true"></div>
+
+{{-- ═══ MOBILE DRAWER ═══ --}}
+<div class="hdr-mobile-drawer" id="hdrMobileDrawer" role="dialog" aria-modal="true" aria-label="Navigation Menu">
+    <div class="hdr-drawer-header">
+        <div class="hdr-drawer-logo">
+            <a href="/"><img src="{{ asset(get_setting('frontend_logo_menu')) }}" alt="{{ app_name() }} Logo"></a>
+        </div>
+        <button class="hdr-drawer-close" id="hdrDrawerClose" aria-label="Close menu">✕</button>
+    </div>
+
+    <div class="hdr-drawer-body">
+        <ul class="hdr-mobile-nav">
+            <li class="hdr-mobile-nav-item">
+                <a href="/" class="hdr-mobile-nav-link {{ request()->is('/') ? 'hdr-mob-active' : '' }}">Home</a>
+            </li>
+
+            <li class="hdr-mobile-nav-item">
+                <button class="hdr-mobile-nav-link w-100 text-start" id="mobileServicesToggle" aria-expanded="false"
+                    aria-controls="mobileServicesSubmenu">
+                    <span>Our Services</span>
+                    <span class="hdr-mobile-sub-arrow" id="mobileServicesArrow">▾</span>
+                </button>
+                <ul class="hdr-mobile-submenu" id="mobileServicesSubmenu">
+                    @foreach ($services as $svc)
+                        <li><a href="/service/{{ $svc->id }}">{{ $svc->title }}</a></li>
+                    @endforeach
+                </ul>
+            </li>
+
+            <li class="hdr-mobile-nav-item">
+                <a href="{{ route('appointment.index') }}"
+                    class="hdr-mobile-nav-link {{ request()->is('appointment*') ? 'hdr-mob-active' : '' }}">Book
+                    Appointment</a>
+            </li>
+
+            <li class="hdr-mobile-nav-item">
+                <a href="/teams" class="hdr-mobile-nav-link {{ request()->is('team*') ? 'hdr-mob-active' : '' }}">Our
+                    Team</a>
+            </li>
+
+            <li class="hdr-mobile-nav-item">
+                <a href="{{ route('about.index') }}"
+                    class="hdr-mobile-nav-link {{ request()->is('about*') ? 'hdr-mob-active' : '' }}">About Us</a>
+            </li>
+
+            <li class="hdr-mobile-nav-item">
+                <a href="/contact"
+                    class="hdr-mobile-nav-link {{ request()->is('contact*') ? 'hdr-mob-active' : '' }}">Contact Us</a>
+            </li>
+        </ul>
+
+        <a href="tel:{{ preg_replace('/[^0-9+]/', '', get_setting('office_phone', '01768044211')) }}"
+            class="hdr-drawer-call">
+            <i class="ri-phone-fill"></i>
+            <span>{{ get_setting('office_phone', '01768044211') }}</span>
+        </a>
+    </div>
+</div>
+
+{{-- Spacer so page content starts below the fixed header.
+When transparent mode is active (top of page) the spacer height is 0
+so the hero banner sits directly behind the header. --}}
+<div id="hdrSpacer"></div>
+
 <script>
-    // Add scroll event listener for header background
-    window.addEventListener('scroll', function() {
-        var navbar = document.querySelector('.navbar-area');
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
+    /* Pass server-side page context to JS */
+    window.hdrIsHomePage = {{ $isHomePage ? 'true' : 'false' }};
 </script>
-
 <script>
-    // Desktop dropdown: allow click-to-toggle in addition to hover (useful for touch/tablet)
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.dropdown-toggle.custom-arrow').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                if (window.innerWidth <= 991) return; // mobile uses its own menu
-                e.preventDefault();
-                var parent = btn.closest('.nav-item.dropdown');
-                if (!parent) return;
-                document.querySelectorAll('.nav-item.dropdown.show').forEach(function(open) {
-                    if (open !== parent) open.classList.remove('show');
-                });
-                parent.classList.toggle('show');
-            });
-        });
+    (function () {
+        'use strict';
 
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 991) return;
-            if (!e.target.closest('.navbar-area')) {
-                document.querySelectorAll('.nav-item.dropdown.show').forEach(function(open) {
-                    open.classList.remove('show');
-                });
+        var IS_HOME = window.hdrIsHomePage === true;
+
+        var topbar = document.querySelector('.hdr-topbar');
+        var navbar = document.getElementById('hdrNavbar');
+        var spacer = document.getElementById('hdrSpacer');
+        var ham = document.getElementById('hdrHamburger');
+        var drawer = document.getElementById('hdrMobileDrawer');
+        var overlay = document.getElementById('hdrOverlay');
+        var closeBtn = document.getElementById('hdrDrawerClose');
+
+        /* ── Recalculate fixed positions and spacer height ── */
+        function updateLayout() {
+            var topbarH = topbar ? topbar.offsetHeight : 0;
+            var navbarH = navbar ? navbar.offsetHeight : 0;
+
+            // On mobile (<576px) topbar is hidden via CSS — treat as 0
+            if (window.innerWidth < 576) {
+                topbarH = 0;
             }
-        });
 
-        document.querySelectorAll('.projects-status-tab').forEach(function(tab) {
-            function activateTab() {
-                var status = tab.getAttribute('data-status');
-                document.querySelectorAll('.projects-status-tab').forEach(function(item) {
-                    item.classList.toggle('active', item === tab);
-                });
-                document.querySelectorAll('.projects-status-panel').forEach(function(panel) {
-                    panel.classList.toggle('active', panel.getAttribute('data-status') ===
-                        status);
-                });
-                var dropdownPanel = tab.closest('.projects-dropdown-panel');
-                if (dropdownPanel) {
-                    dropdownPanel.classList.add('active-status');
+            if (navbar) {
+                navbar.style.top = topbarH + 'px';
+            }
+            if (spacer) {
+                spacer.style.height = (topbarH + navbarH) + 'px';
+            }
+            if (drawer) {
+                drawer.style.top = '0px';
+                drawer.style.maxHeight = '88vh';
+            }
+        }
+
+        /* ── Shadow + topbar hide on scroll ── */
+        var SCROLL_THRESHOLD = 60;
+
+        function onScroll() {
+            var scrolled = window.scrollY > SCROLL_THRESHOLD;
+
+            // Toggle scrolled shadow
+            navbar.classList.toggle('hdr-scrolled', scrolled);
+
+            // Transparent hero mode — HOMEPAGE ONLY, only when at the very top
+            if (IS_HOME) {
+                navbar.classList.toggle('hdr-transparent', !scrolled);
+            } else {
+                // Always solid on other pages
+                navbar.classList.remove('hdr-transparent');
+            }
+
+            // Hide/show topbar
+            if (topbar) {
+                topbar.classList.toggle('hdr-topbar-hidden', scrolled);
+            }
+
+            // Move navbar: 0 when topbar hidden, topbar height when visible
+            var topbarH = (topbar && !scrolled && window.innerWidth >= 576)
+                ? topbar.offsetHeight
+                : 0;
+            navbar.style.top = topbarH + 'px';
+
+            // Spacer: collapse to 0 on homepage when transparent; full height on all other pages
+            if (spacer) {
+                var navbarH = navbar ? navbar.offsetHeight : 0;
+                if (IS_HOME && !scrolled) {
+                    spacer.style.height = '0px';
+                } else {
+                    spacer.style.height = (topbarH + navbarH) + 'px';
                 }
             }
+        }
 
-            tab.addEventListener('click', function() {
-                activateTab();
-            });
-            tab.addEventListener('mouseenter', function() {
-                activateTab();
-            });
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', function () {
+            updateLayout();
+            onScroll();
+            if (window.innerWidth >= 992) closeDrawer();
         });
 
-        // Collapse the mobile menu automatically when resizing up to desktop width
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 991 && window.bootstrap) {
-                document.querySelectorAll('#mobileNavMenu.show, #mobileNavMenu .collapse.show').forEach(
-                    function(el) {
-                        var instance = bootstrap.Collapse.getInstance(el);
-                        if (instance) {
-                            instance.hide();
-                        } else {
-                            el.classList.remove('show');
-                        }
-                    });
-            }
+        // Run on load
+        updateLayout();
+        onScroll();
+
+        /* ── Mobile drawer open/close ── */
+        function openDrawer() {
+            ham.classList.add('is-open');
+            drawer.classList.add('is-open');
+            overlay.classList.add('is-open');
+            ham.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            ham.classList.remove('is-open');
+            drawer.classList.remove('is-open');
+            overlay.classList.remove('is-open');
+            ham.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+
+        ham.addEventListener('click', function () {
+            if (drawer.classList.contains('is-open')) { closeDrawer(); } else { openDrawer(); }
         });
-    });
+
+        closeBtn.addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+
+        /* Escape key */
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeDrawer();
+        });
+
+        /* ── Mobile Services Submenu ── */
+        var mobServBtn = document.getElementById('mobileServicesToggle');
+        var mobServSub = document.getElementById('mobileServicesSubmenu');
+        var mobServArrow = document.getElementById('mobileServicesArrow');
+
+        if (mobServBtn) {
+            mobServBtn.addEventListener('click', function () {
+                var isOpen = mobServSub.classList.toggle('is-open');
+                mobServArrow.classList.toggle('rotated', isOpen);
+                mobServBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+        }
+    })();
 </script>
