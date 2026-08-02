@@ -38,7 +38,7 @@
         thumbs: true,
         thumbsPrerendered: true,
         autoplay: true,
-        autoplayTimeout: 3000, // 3 seconds per slide
+        autoplayTimeout: 5000, // 5 seconds per slide
         smartSpeed: 900,
         autoplayHoverPause: true,
         animateOut: 'fadeOut',
