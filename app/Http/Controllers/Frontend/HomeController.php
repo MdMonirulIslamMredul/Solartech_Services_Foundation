@@ -152,14 +152,20 @@ class HomeController
     {
         $contact = new Contact;
         $contact->name = $request->name;
-        $contact->qualification = $request->qualification;
         $contact->phone = $request->phone;
         $contact->email = $request->email;
-        $contact->course = $request->interest;
-        $contact->country = $request->prefer;
-        $contact->message  = $request->message;
+        $contact->message = $request->message;
+        if (\Illuminate\Support\Facades\Schema::hasColumn($contact->getTable(), 'qualification')) {
+            $contact->qualification = $request->qualification;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn($contact->getTable(), 'course')) {
+            $contact->course = $request->interest;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn($contact->getTable(), 'country')) {
+            $contact->country = $request->prefer;
+        }
         $contact->save();
-        return back()->withFlashSuccess('Thank you for your message. It has been sent');
+        return back()->with('success', 'Thank you for your message. It has been sent successfully.')->withFlashSuccess('Thank you for your message. It has been sent');
     }
 
 
@@ -188,7 +194,8 @@ class HomeController
         $faqs = Faq::where('page_id', $id)->get();
         $project = Project::find($id);
         $university = University::where('study_destination_id', $project->id)->get();
-        return view('frontend.content.studydestination', compact('faqs', 'project', 'university'));
+        $brands = \App\Models\Brand::where('is_active', 1)->orderBy('id', 'DESC')->get();
+        return view('frontend.content.studydestination', compact('faqs', 'project', 'university', 'brands'));
     }
     public function blogindex()
     {
