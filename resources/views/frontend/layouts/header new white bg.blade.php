@@ -1,5 +1,5 @@
 @php
-    $services = DB::table('services')->where('is_active', 1)->latest()->get();
+    $services = DB::table('services')->where('is_active', 1)->orderBy('id', 'asc')->get();
 @endphp
 
 <style>
