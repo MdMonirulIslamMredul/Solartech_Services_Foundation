@@ -4,7 +4,7 @@
 <style>
 /* Modern blog details styling */
 .blog-detail-banner {position:relative; height:420px; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:-60px;}
-.blog-detail-banner::before {content:''; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.65));}
+.blog-detail-banner::before {content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(17, 29, 94, 0.88) 0%, rgba(17, 29, 94, 0.6) 50%, rgba(17, 29, 94, 0.25) 100%); z-index: 1;}
 .blog-detail-banner h1 {position:relative; z-index:2; font-size:48px; font-weight:800; color:#fff; text-align:center; padding:0 20px; line-height:1.2; letter-spacing:1px; text-shadow:0 4px 12px rgba(0,0,0,.5);}
 .blog-detail-container {background:#ffffff; border-radius:24px; box-shadow:0 12px 42px -12px rgba(0,0,0,.18); padding:50px 60px; margin-top:80px; border:2px solid transparent; transition:.35s ease;}
 .blog-detail-container:hover {border-color:#ff8c00;}
