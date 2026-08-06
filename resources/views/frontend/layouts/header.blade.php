@@ -1,5 +1,5 @@
 @php
-    $services = DB::table('services')->where('is_active', 1)->latest()->get();
+    $services = DB::table('services')->where('is_active', 1)->orderBy('id', 'asc')->get();
     $isHomePage = request()->is('/');
 @endphp
 
@@ -677,6 +677,8 @@
             <div class="hdr-topbar-right">
                 <a href="{{ get_setting('facebook') }}" target="_blank" class="hdr-social-link" aria-label="Facebook"><i
                         class="ri-facebook-fill"></i></a>
+                <a href="{{ get_setting('youtube') }}" target="_blank" class="hdr-social-link" aria-label="Youtube"><i
+                        class="ri-youtube-fill"></i></a>
                 <a href="{{ get_setting('twitter') }}" target="_blank" class="hdr-social-link" aria-label="Twitter"><i
                         class="ri-twitter-fill"></i></a>
                 <a href="{{ get_setting('instagram') }}" target="_blank" class="hdr-social-link"
