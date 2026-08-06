@@ -5,7 +5,7 @@
  <style>
      /* // Modern Footer Styles */
      .modern-footer {
-         background: linear-gradient(0deg, #b8c245 0%, #007e41 100%);
+         background: linear-gradient(135deg, rgb(20, 44, 82) 0%, rgb(27, 58, 107) 60%, rgb(14, 75, 117) 100%);
          color: #e5e7eb;
          padding: 80px 0 0;
      }
@@ -33,14 +33,19 @@
          bottom: 0;
          width: 60px;
          height: 3px;
-         background: #ff8c00;
+         background: #29A9E0;
          border-radius: 3px;
      }
 
      .footer-logo-section img {
-         height: 70px;
+         background: #ffffff;
+         padding: 0.35rem 0.45rem;
+         border-radius: 10px;
+         height: 60px;
+         max-height: 60px;
          margin-bottom: 18px;
-         filter: brightness(1.1);
+         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+         object-fit: contain;
      }
 
      .footer-logo-section p {
@@ -72,12 +77,12 @@
      .footer-services-list li a:before {
          content: '▸';
          margin-right: 8px;
-         color: #ff8c00;
+         color: #29A9E0;
          font-weight: 700;
      }
 
      .footer-services-list li a:hover {
-         color: #ff8c00;
+         color: #29A9E0;
          transform: translateX(4px);
      }
 
@@ -89,7 +94,7 @@
      }
 
      .footer-contact-item i {
-         color: #ff8c00;
+         color: #29A9E0;
          font-size: 20px;
          margin-top: 2px;
      }
@@ -107,7 +112,7 @@
      }
 
      .footer-contact-item a:hover {
-         color: #ff8c00;
+         color: #29A9E0;
      }
 
      .footer-map-container {
@@ -152,19 +157,21 @@
          height: 46px;
          border-radius: 50%;
          background: #ffffff;
-         color: #007e41;
+         color: rgb(27, 58, 107);
          font-size: 20px;
          border: 2px solid transparent;
+         text-decoration: none !important;
          transition: .35s;
          box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
      }
 
      .footer-social-links a:hover {
-         background: #ff8c00;
+         background: #29A9E0;
          color: #fff;
          border-color: #fff;
+         text-decoration: none !important;
          transform: translateY(-4px);
-         box-shadow: 0 8px 20px rgba(255, 140, 0, .5);
+         box-shadow: 0 8px 20px rgba(41, 169, 224, .5);
      }
 
      .footer-bottom {
@@ -181,14 +188,14 @@
      }
 
      .footer-bottom a {
-         color: #ff8c00;
+         color: #29A9E0;
          text-decoration: none;
          font-weight: 600;
          transition: .3s;
      }
 
      .footer-bottom a:hover {
-         color: #ffa438;
+         color: #38B6FF;
          text-decoration: underline;
      }
 
@@ -276,6 +283,8 @@
              <div class="footer-social-links">
                  <a href="{{ get_setting('facebook') }}" target="_blank" aria-label="Facebook"><i
                          class="ri-facebook-fill"></i></a>
+                 <a href="{{ get_setting('youtube') }}" target="_blank" aria-label="Youtube"><i
+                         class="ri-youtube-fill"></i></a>
                  <a href="{{ get_setting('twitter') }}" target="_blank" aria-label="Twitter"><i
                          class="ri-twitter-fill"></i></a>
                  <a href="{{ get_setting('instagram') }}" target="_blank" aria-label="Instagram"><i
@@ -290,7 +299,7 @@
      <div class="footer-bottom">
          <div class="container">
              <p>
-                 © {{ get_setting('copyright_text') }} |
+                 © {{ date('Y') }} {{ get_setting('copyright_text') }} |
                  <a href="https://www.techwebdit.com" target="_blank">Developed by Techweb BD IT</a>
              </p>
          </div>
