@@ -47,6 +47,34 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- This stylesheet dynamically changed from style.less -->
 
+    <!-- Smart Bangla Cleaning Services Theme Tokens -->
+    <style>
+        :root {
+            /* Brand Color Palette from Logo */
+            --sb-primary-navy: rgb(27, 58, 107);     /* Header & Main Primary Navy */
+            --sb-primary-dark: rgb(20, 44, 82);       /* Darker Navy Base */
+            --sb-accent-cyan: #29A9E0;                /* Vivid Aqua Cyan Accent */
+            --sb-accent-hover: #1F8FC2;               /* Hover Aqua Cyan */
+            --sb-accent-light: #EBF7FC;               /* Soft Ice Blue Tint */
+            --sb-bg-light: #F8FAFC;                   /* Clean Light Background */
+            --sb-text-dark: #0F172A;                  /* High Contrast Text */
+            --sb-text-muted: #64748B;                 /* Muted Text */
+
+            /* Legacy variable overrides to seamlessly update all components */
+            --nt-primary: #F8FAFC;
+            --nt-secondary: rgb(27, 58, 107);
+            --nt-accent: #29A9E0;
+            --nt-dark: #0F172A;
+            --nt-surface: #FFFFFF;
+            --nt-border: #E2E8F0;
+            --nt-text-muted: #64748B;
+            --nt-text-on-dark: #FFFFFF;
+            --nt-accent-10: rgba(41, 169, 224, 0.12);
+            --nt-accent-25: rgba(41, 169, 224, 0.25);
+            --nt-primary-50: #F8FAFC;
+        }
+    </style>
+
     @php
         $phone = get_setting('office_phone');
     @endphp
@@ -56,20 +84,26 @@
 
 
     <!-- WhatsApp Floating Chat -->
-    <div id="whatsapp-popup">
-        <p>👋 Hi there! Need help? <br> Chat with us on WhatsApp.</p>
+    <div class="whatsapp-wrapper">
+        <div id="whatsapp-popup">
+            <p class="m-0">👋 Hi there! Need help? <br> Chat with us on WhatsApp.</p>
+        </div>
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $phone) }}" target="_blank" id="whatsapp-chat-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat on WhatsApp">
+        </a>
     </div>
 
-    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $phone) }}" target="_blank" id="whatsapp-chat-btn">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat on WhatsApp">
-    </a>
-
     <style>
-        /* Floating Button */
-        #whatsapp-chat-btn {
+        .whatsapp-wrapper {
             position: fixed;
             bottom: 20px;
-            right: 40px;
+            right: 30px;
+            z-index: 9999;
+        }
+
+        /* Floating Button */
+        #whatsapp-chat-btn {
+            position: relative;
             background: #25D366;
             width: 60px;
             height: 60px;
@@ -78,7 +112,6 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 9999;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
         }
@@ -93,34 +126,32 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* Static Popup Message */
+        /* Popup Message (Hidden by default, shown on hover) */
         #whatsapp-popup {
-            position: fixed;
-            bottom: 90px;
-            right: 50px;
+            position: absolute;
+            bottom: 72px;
+            right: 0;
             background: #fff;
             color: #333;
             border-radius: 8px;
+            padding: 12px 16px;
             font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            z-index: 9998;
-            max-width: 200px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            width: 220px;
             border-left: 4px solid #25D366;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            animation: fadeIn 0.5s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
         }
 
-        /* Popup Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .whatsapp-wrapper:hover #whatsapp-popup {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
         }
     </style>
 
