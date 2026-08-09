@@ -5,6 +5,44 @@
 <title>{{ app_name() }} | @yield('title')</title>
 
 <style>
+    /* Hero Carousel Zoom Effect */
+    .banner-area .slider-item {
+        position: relative;
+        overflow: hidden;
+    }
+    .banner-area .slider-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: transform 6s ease-out;
+        transform: scale(1);
+    }
+    .banner-area .owl-item.active .slider-bg {
+        animation: kenburns 7s ease-in-out infinite alternate;
+    }
+    @keyframes kenburns {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.15);
+        }
+    }
+    .banner-area .slider-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(90deg, rgba(17, 29, 94, 0.88) 0%, rgba(17, 29, 94, 0.6) 50%, rgba(17, 29, 94, 0.25) 100%);
+    }
+    .banner-area .slider-content {
+        position: relative;
+        z-index: 2;
+    }
+
     /* Service card hover border */
     .single-service-card:hover {
         border-color: #ff8c00 !important;
@@ -38,13 +76,19 @@
     <div class="banner-area pb-100" style="position: relative;">
         <div class="container-fluid p-0">
             <div class="hero-slider owl-carousel owl-theme" data-slider-id="1">
-                <div class="slider-item" style="background-image: url('{{ asset('/setting/service/' . $banner->banner) }}'); background-size: cover; background-position: center; height: 450px; display: flex; align-items: center; justify-content: center;">
-                    <div class="slider-content text-center">
-                        <h2 style="color: #fff; font-size: 52px; font-weight: 900; text-shadow: 3px 3px 12px rgba(0,0,0,0.6);">
-                            Our Services
-                        </h2>
-                    </div>
-                </div>
+                @foreach ($services as $service)
+                    @if ($service->banner)
+                        <div class="slider-item" style="height: 450px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                            <div class="slider-bg" style="background-image: url('{{ asset('/setting/service/' . $service->banner) }}');"></div>
+                            <div class="slider-overlay"></div>
+                            <div class="slider-content text-center">
+                                <h2 style="color: #fff; font-size: 52px; font-weight: 900; text-shadow: 3px 3px 12px rgba(0,0,0,0.6);">
+                                    {{ $service->title ?? 'Our Services' }}
+                                </h2>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </div>
     </div>
